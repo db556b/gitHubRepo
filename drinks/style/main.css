@@ -1,0 +1,83 @@
+/******************************************
+/* CSS
+/*******************************************/
+
+/* Box Model Hack */
+*{
+    box-sizing: border-box;
+  }
+  html{
+      font-size: 67.5%;
+  }
+  /******************************************
+  /* LAYOUT
+  /*******************************************/
+  body{
+      background-color: cadetblue;
+      padding: 0%;
+  }
+  main, h1, input, h2, h3{
+      display: block;
+      margin: auto;
+      text-align: center;
+  }
+  input{
+      background-color: rgb(124, 152, 153);
+      border: .1 rem solid black;
+      color: white;
+  }
+  main h1{
+      font-size: 3rem;
+  }
+h1, h2, h3 {
+    font-size:2.5rem;
+    margin-bottom: 1rem;
+}
+  main p{
+      font-size: 2rem;
+  }
+
+  input {
+      width: 20rem;
+      height: 3rem;
+      font-weight: bolder;
+  }
+  img {
+      margin:auto;
+      display: block;
+      width: 20rem;
+  }
+  section > .drinks{
+    padding: 1rem;
+    width: 100%; 
+    height: fit-content; 
+    float: left;
+    border-bottom: .1rem solid grey;
+    margin-bottom: 1rem;
+  }
+
+  
+  .titleAndPic {
+      width: 20%;
+      float: left;
+  }
+
+  .ingredients{
+      width: 20%;
+      float: left;
+      height: 100%;
+      font-size:2rem;
+      padding: 0 2rem;
+  }
+
+  .instructions {
+      width:60%;
+      float:left;
+      text-align: left;
+      font-size: 2rem;
+      padding: 0 2rem;
+  }
+  /******************************************
+  /* ADDITIONAL STYLES
+  /*******************************************/
+  
