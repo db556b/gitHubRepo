@@ -57,13 +57,13 @@ body {
 
 .top, .bottom{
     border: 2px solid red;
-    height: 50vh;
+    height: 42vh;
 }
 
 img {
 	height: 30vh;
 }
 
-#dealerFirstCard{
-	visibility: hidden;
+footer {
+	height: 10vh;
 }
