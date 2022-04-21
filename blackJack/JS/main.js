@@ -1,12 +1,15 @@
 
 //get deck
 let deckId =''
+//tracks total number of cards left throughout the game
 let cardsLeft
+//player's total w/ and w/o an ace (+11 in with ace category) and tracks if the player has been dealt an ace
 let playerTotal = 0
 let playerTotalWithAce = 0
+let playerHasAce = false
+//dealer's total w/ and w/o an ace (+11 in with ace category) and tracks if the dealer has been dealt an ace
 let dealerTotal = 0
 let dealerTotalWithAce = 0
-let playerHasAce = false
 let dealerHasAce = false
 
 fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
@@ -18,7 +21,7 @@ fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
           console.log(`error ${err}`)
       });
 
-
+// retrieves new deck when the total cards available in the deck reaches less than 15
 function newDeck(x){
   if (x < 15){
       fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
@@ -32,7 +35,7 @@ function newDeck(x){
     });
   }
 }
-//draw starting cards 
+//draw starting cards, puts their image in the DOM, and adds the total value of each card to their pertinent total global variable
 
 document.getElementById('deal').addEventListener('click', deal)
 document.getElementById('hit').addEventListener('click', hit)
@@ -55,7 +58,7 @@ function deal(){
 });
 }
 
-//add option for hit or stay
+//functionality of a hit in blackjack. calls function to add total to player's score and displays new card to the DOM
 function hit(){
     const url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`
     fetch(url)
@@ -65,7 +68,6 @@ function hit(){
         const img = document.createElement('img')
         img.src = data.cards[0].image
         document.getElementById('bottom').appendChild(img) 
- //       populateScores(data)
         cardsLeft = data.remaining
         addValueOfNewCardPlayer(data.cards[0].value)
     })
@@ -73,9 +75,8 @@ function hit(){
         console.log(`error ${err}`)
 });
 }
-//once stay have dealer down card revealed and hit until dealerTotal > 17
+//functionality of a stay in blackjack. calls function to add total to dealer's score and displays new card to the DOM. On first hit replaces dealer's downcard with a newly drawn card (prevents a player from cheating and accessing the console to view the dealer's downcard)
 function stay(){
-
     const url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`
     fetch(url)
         .then(res => res.json()) // parse response as JSON
@@ -90,7 +91,6 @@ function stay(){
             img.src = data.cards[0].image
             document.getElementById('top').appendChild(img) 
             cardsLeft = data.remaining
- //           populateScores(data)
             addValueOfNewCardDealer(data.cards[0].value)
         }
     })
@@ -98,6 +98,8 @@ function stay(){
         console.log(`error ${err}`)
 });
 }
+
+//This function populates the initial deal of three cards to the Dom. Called in the deal() function
 function populateDeal(data){
     imageSrc = "assets/images/backOfCard.png"
     const img0 = document.createElement('img')
@@ -128,6 +130,7 @@ function getValues(x){
     
 }
 
+//This function loops through the initial deal; extracts the value of each of the cards and then adds to the cumulative value of the dealer's and player's hands
 function loopThroughCards(object){
     object.forEach((e,i) => {
         let value = getValues(e.value)
@@ -154,6 +157,7 @@ function loopThroughCards(object){
     })
 }
 
+//this function called in the stay() function extracts the value of the card and then saves the value into the cumulative dealer hand values
 function addValueOfNewCardDealer(object){
     let value = getValues(object)
     if (value === 11){
@@ -168,6 +172,8 @@ function addValueOfNewCardDealer(object){
 }
 }
 
+
+//this function called in the hit() function extracts the value of the card and then saves the value into the cumulative player hand values
 function addValueOfNewCardPlayer(object){
     let value = getValues(object)
     if (value === 11){
@@ -183,7 +189,7 @@ function addValueOfNewCardPlayer(object){
 }
 //compare to find winner
 
-//reset playing field
+//reset playing field, DOM, and all global varibale to their initial state. currently called by event listener on the reset button/ This is for testing only and will be integrated into the stay() function once complete
 function reset(){
     document.getElementById('top').replaceChildren()
     document.getElementById('bottom').replaceChildren()
