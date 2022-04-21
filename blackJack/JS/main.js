@@ -8,6 +8,7 @@ let dealerTotal = 0
 let dealerTotalWithAce = 0
 let playerHasAce = false
 let dealerHasAce = false
+
 fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
       .then(res => res.json()) // parse response as JSON
       .then(data => {
@@ -66,6 +67,7 @@ function hit(){
         document.getElementById('bottom').appendChild(img) 
  //       populateScores(data)
         cardsLeft = data.remaining
+        addValueOfNewCardPlayer(data.cards[0].value)
     })
         .catch(err => {
         console.log(`error ${err}`)
@@ -82,12 +84,14 @@ function stay(){
         if (imageSrc === "assets/images/backOfCard.png" ) {
             imageSrc = data.cards[0].image
             document.getElementById('dealerFirstCard').src = data.cards[0].image
+            addValueOfNewCardDealer(data.cards[0].value)
         } else {
             const img = document.createElement('img')
             img.src = data.cards[0].image
             document.getElementById('top').appendChild(img) 
             cardsLeft = data.remaining
  //           populateScores(data)
+            addValueOfNewCardDealer(data.cards[0].value)
         }
     })
         .catch(err => {
@@ -125,8 +129,8 @@ function getValues(x){
 }
 
 function loopThroughCards(object){
-    for (let i = 0; i < object.length; i++){
-       let value = getValues(object[i].value)
+    object.forEach((e,i) => {
+        let value = getValues(e.value)
         console.log(value)
         if (i < 2){
             if (value === 11){
@@ -147,8 +151,35 @@ function loopThroughCards(object){
                 dealerTotalWithAce += value
         }
     }
-    console.log(dealerTotal,playerTotal, playerTotalWithAce, dealerTotalWithAce)
-    }
+    })
+}
+
+function addValueOfNewCardDealer(object){
+    let value = getValues(object)
+    if (value === 11){
+    dealerHasAce = true
+    dealerTotal += 1
+    dealerTotalWithAce += 11
+    console.log(dealerTotal)
+} else {
+    dealerTotal += value
+    dealerTotalWithAce += value
+    console.log(dealerTotal)
+}
+}
+
+function addValueOfNewCardPlayer(object){
+    let value = getValues(object)
+    if (value === 11){
+    playerHasAce = true
+    playerTotal += 1
+    playerTotalWithAce += 11
+    console.log(playerTotal)
+} else {
+    playerTotal += value
+    playerTotalWithAce += value
+    console.log(playerTotal)
+}
 }
 //compare to find winner
 
@@ -157,4 +188,11 @@ function reset(){
     document.getElementById('top').replaceChildren()
     document.getElementById('bottom').replaceChildren()
     newDeck(cardsLeft)
+    playerTotal = 0
+    playerTotalWithAce = 0
+    dealerTotal = 0
+    dealerTotalWithAce = 0
+    playerHasAce = false
+    dealerHasAce = false
+
 }
