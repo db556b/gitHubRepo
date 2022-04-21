@@ -43,6 +43,7 @@ document.getElementById('stay').addEventListener('click', stay)
 document.getElementById('reset').addEventListener('click', reset)
 let imageSrc = "assets/images/backOfCard.png"
 function deal(){
+    reset()
     const url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=3`
     fetch(url)
         .then(res => res.json()) // parse response as JSON
