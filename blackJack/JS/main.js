@@ -222,9 +222,6 @@ function getDealerCard(){
 });
 }
 //This is a timer to delay the API fetch call inside the loop for the dealer in the stay() function
-// async function task(i) { // 3
-//     await timer(1000);
-//   }
   function timer(ms) { return new Promise(res => setTimeout(res, ms)); }
 
 
