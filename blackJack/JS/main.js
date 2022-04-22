@@ -50,7 +50,6 @@ function deal(){
         .then(data => {
         console.log(data)
         populateDeal(data)
- //       populateScores(data)
         loopThroughCards(data.cards)
         cardsLeft = data.remaining
     })
@@ -65,7 +64,7 @@ function hit(){
     fetch(url)
         .then(res => res.json()) // parse response as JSON
         .then(data => {
-        console.log(data)
+      //  console.log(data)
         const img = document.createElement('img')
         img.src = data.cards[0].image
         document.getElementById('bottom').appendChild(img) 
@@ -77,27 +76,14 @@ function hit(){
 });
 }
 //functionality of a stay in blackjack. calls function to add total to dealer's score and displays new card to the DOM. On first hit replaces dealer's downcard with a newly drawn card (prevents a player from cheating and accessing the console to view the dealer's downcard)
-function stay(){
-    const url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`
-    fetch(url)
-        .then(res => res.json()) // parse response as JSON
-        .then(data => {
-        console.log(data)
-        if (imageSrc === "assets/images/backOfCard.png" ) {
-            imageSrc = data.cards[0].image
-            document.getElementById('dealerFirstCard').src = data.cards[0].image
-            addValueOfNewCardDealer(data.cards[0].value)
-        } else {
-            const img = document.createElement('img')
-            img.src = data.cards[0].image
-            document.getElementById('top').appendChild(img) 
-            cardsLeft = data.remaining
-            addValueOfNewCardDealer(data.cards[0].value)
-        }
-    })
-        .catch(err => {
-        console.log(`error ${err}`)
-});
+async function stay(){
+    document.getElementById('deal').disabled = true
+    document.getElementById('hit').disabled = true
+    while (dealerTotal < 17 && dealerTotalWithAce <= 17 || dealerTotal < 17 && dealerTotalWithAce > 21){
+        getDealerCard()
+        await timer(500)
+    }
+    document.getElementById('deal').disabled = false
 }
 
 //This function populates the initial deal of three cards to the Dom. Called in the deal() function
@@ -141,13 +127,15 @@ function loopThroughCards(object){
                 playerHasAce = true
                 playerTotal += 1
                 playerTotalWithAce += 11
+                updatePlayerDom()
             } else {
                 playerTotal += value
                 playerTotalWithAce += value
+                updatePlayerDom()
             }
         } else {
             if (value === 11){
-                dealerdealerHasAce = true
+                dealerHasAce = true
                 dealerTotal += 1
                 dealerTotalWithAce += 11
             } else {
@@ -165,12 +153,13 @@ function addValueOfNewCardDealer(object){
     dealerHasAce = true
     dealerTotal += 1
     dealerTotalWithAce += 11
-    console.log(dealerTotal)
+  //  console.log(dealerTotal)
 } else {
     dealerTotal += value
     dealerTotalWithAce += value
-    console.log(dealerTotal)
+  //  console.log(dealerTotal)
 }
+updateDealerDom()
 }
 
 
@@ -185,8 +174,9 @@ function addValueOfNewCardPlayer(object){
 } else {
     playerTotal += value
     playerTotalWithAce += value
-    console.log(playerTotal)
+  //  console.log(playerTotal)
 }
+updatePlayerDom()
 }
 //compare to find winner
 
@@ -201,5 +191,61 @@ function reset(){
     dealerTotalWithAce = 0
     playerHasAce = false
     dealerHasAce = false
-
+    document.getElementById('hit').disabled = false
+    document.getElementById('dealer').innerText = `DEALER`
 }
+
+function getDealerCard(){
+    const url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`
+    fetch(url)
+    .then(res => res.json()) // parse response as JSON
+    .then(data => {
+    console.log(data)
+    if (imageSrc === "assets/images/backOfCard.png" ) {
+        imageSrc = data.cards[0].image
+        document.getElementById('dealerFirstCard').src = data.cards[0].image
+        addValueOfNewCardDealer(data.cards[0].value)
+    } else {
+        const img = document.createElement('img')
+        img.src = data.cards[0].image
+        document.getElementById('top').appendChild(img) 
+        cardsLeft = data.remaining
+        addValueOfNewCardDealer(data.cards[0].value)
+    }
+})
+    .catch(err => {
+    console.log(`error ${err}`)
+});
+}
+
+async function task(i) { // 3
+    await timer(1000);
+    console.log(`Task ${i} done!`);
+  }
+  function timer(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+  function updatePlayerDom(){
+      let playerDom = document.getElementById('player')
+      if (playerTotal > 21 && playerTotalWithAce > 21){
+        playerDom.innerText = `PLAYER BUSTS!`
+      } else if (playerTotalWithAce === 21 || playerTotal === 21){
+          playerDom.innerText = `PLAYER HAS 21!!`
+      } else if (playerHasAce === true && playerTotalWithAce < 20) {
+        playerDom.innerText = `PLAYER HAS SOFT ${playerTotalWithAce}`
+      } else {
+          playerDom.innerText = `PLAYER HAS ${playerTotal}`
+      }
+  }
+
+  function updateDealerDom(){
+    let dealerDom = document.getElementById('dealer')
+    if (dealerTotal > 21 && dealerTotalWithAce > 21){
+      dealerDom.innerText = `DEALER BUSTS!`
+    } else if (dealerTotalWithAce === 21 || dealerTotal === 21){
+        dealerDom.innerText = `DEALER HAS 21!!`
+    } else if (dealerHasAce === true && dealerTotalWithAce < 21) {
+      dealerDom.innerText = `DEALER HAS SOFT ${dealerTotalWithAce}`
+    } else {
+        dealerDom.innerText = `DEALER HAS ${dealerTotal}`
+    }
+  }
