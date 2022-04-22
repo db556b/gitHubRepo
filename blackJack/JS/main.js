@@ -79,9 +79,11 @@ function hit(){
 async function stay(){
     document.getElementById('deal').disabled = true
     document.getElementById('hit').disabled = true
-    while (dealerTotal < 17 && dealerTotalWithAce <= 17 || dealerTotal < 17 && dealerTotalWithAce > 21){
+    let i = 1
+    while (dealerTotal < 17 && dealerTotalWithAce <= 17 || dealerTotal < 17 && dealerTotalWithAce > 21 && i >= 2){
         getDealerCard()
         await timer(500)
+        i++
     }
     document.getElementById('deal').disabled = false
 }
@@ -146,7 +148,7 @@ function loopThroughCards(object){
     })
 }
 
-//this function called in the stay() function extracts the value of the card and then saves the value into the cumulative dealer hand values
+//this function called in the stay() function extracts the value of the card and then saves the value into the cumulative dealer hand values and updates the dom with the values
 function addValueOfNewCardDealer(object){
     let value = getValues(object)
     if (value === 11){
@@ -163,7 +165,7 @@ updateDealerDom()
 }
 
 
-//this function called in the hit() function extracts the value of the card and then saves the value into the cumulative player hand values
+//this function called in the hit() function extracts the value of the card and then saves the value into the cumulative player hand values and updates the dom with the values
 function addValueOfNewCardPlayer(object){
     let value = getValues(object)
     if (value === 11){
@@ -195,6 +197,8 @@ function reset(){
     document.getElementById('dealer').innerText = `DEALER`
 }
 
+
+// this function fetches a new card for the dealer and is called inside the loop for the stay() function
 function getDealerCard(){
     const url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`
     fetch(url)
@@ -217,13 +221,14 @@ function getDealerCard(){
     console.log(`error ${err}`)
 });
 }
-
-async function task(i) { // 3
-    await timer(1000);
-    console.log(`Task ${i} done!`);
-  }
+//This is a timer to delay the API fetch call inside the loop for the dealer in the stay() function
+// async function task(i) { // 3
+//     await timer(1000);
+//   }
   function timer(ms) { return new Promise(res => setTimeout(res, ms)); }
 
+
+  // this function updates the player's portion of the DOM to display the player's current total.
   function updatePlayerDom(){
       let playerDom = document.getElementById('player')
       if (playerTotal > 21 && playerTotalWithAce > 21){
@@ -236,7 +241,7 @@ async function task(i) { // 3
           playerDom.innerText = `PLAYER HAS ${playerTotal}`
       }
   }
-
+// this function updates the dealer's portion of the DOM to display the dealer's current total.
   function updateDealerDom(){
     let dealerDom = document.getElementById('dealer')
     if (dealerTotal > 21 && dealerTotalWithAce > 21){
