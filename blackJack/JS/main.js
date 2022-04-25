@@ -11,6 +11,8 @@ let playerHasAce = false
 let dealerTotal = 0
 let dealerTotalWithAce = 0
 let dealerHasAce = false
+let playerDom = document.getElementById('player')
+let dealerDom = document.getElementById('dealer')
 
 fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
       .then(res => res.json()) // parse response as JSON
@@ -87,7 +89,7 @@ async function stay(){
         i++
     }
     document.getElementById('deal').disabled = false
-   
+   compareScores()
 }
 
 //This function populates the initial deal of three cards to the Dom. Called in the deal() function
@@ -164,6 +166,10 @@ function addValueOfNewCardDealer(object){
   //  console.log(dealerTotal)
 }
 updateDealerDom()
+if (dealerTotalWithAce > 21 && dealerTotal > 21){
+    dealerTotal = `bust`
+    dealerTotalWithAce = 'bust'
+}
 }
 
 
@@ -185,9 +191,20 @@ if (playerTotal > 21 && playerTotalWithAce > 21){
     document.getElementById('hit').disabled = true
     stay()
 }
+if (playerTotalWithAce > 21 && playerTotal > 21){
+    playerTotal = `bust`
+    playerTotalWithAce = 'bust'
+}
 }
 //compare to find winner
-
+function compareScores(){if (playerTotalWithAce === dealerTotalWithAce){
+    dealerDom.innerText = `HAND IS A PUSH`
+    } else if (playerTotalWithAce === `bust` && dealerTotalWithAce === `bust`){
+        dealerTotal > playerTotal ? dealerDom.innerText = `PLAYER HAS LOST` : dealerDom.innerText = `PLAYER HAS WON!`
+    }  else if ( playerTotalWithAce < 21 && dealerTotalWithAce < 21) {
+        dealerTotalWithAce > playerTotalWithAce ? dealerDom.innerText = `PLAYER HAS LOST` : dealerDom.innerText = `PLAYER HAS WON!`
+    } 
+}
 //reset playing field, DOM, and all global varibale to their initial state. currently called by event listener on the reset button/ This is for testing only and will be integrated into the stay() function once complete
 function reset(){
     document.getElementById('top').replaceChildren()
@@ -234,7 +251,6 @@ function getDealerCard(){
 
   // this function updates the player's portion of the DOM to display the player's current total.
   function updatePlayerDom(){
-      let playerDom = document.getElementById('player')
       if (playerTotal > 21 && playerTotalWithAce > 21){
         playerDom.innerText = `PLAYER BUSTS!`
       } else if (playerTotalWithAce === 21 || playerTotal === 21){
@@ -247,7 +263,6 @@ function getDealerCard(){
   }
 // this function updates the dealer's portion of the DOM to display the dealer's current total.
   function updateDealerDom(){
-    let dealerDom = document.getElementById('dealer')
     if (dealerTotal > 21 && dealerTotalWithAce > 21){
       dealerDom.innerText = `DEALER BUSTS!`
     } else if (dealerTotalWithAce === 21 || dealerTotal === 21){
