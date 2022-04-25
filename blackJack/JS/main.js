@@ -197,13 +197,16 @@ if (playerTotalWithAce > 21 && playerTotal > 21){
 }
 }
 //compare to find winner
-function compareScores(){if (playerTotalWithAce === dealerTotalWithAce){
-    dealerDom.innerText = `HAND IS A PUSH`
+function compareScores(){
+    if (playerTotalWithAce === dealerTotalWithAce){
+        dealerDom.innerText = `HAND IS A PUSH`
     } else if (playerTotalWithAce === `bust` && dealerTotalWithAce === `bust`){
         dealerTotal > playerTotal ? dealerDom.innerText = `PLAYER HAS LOST` : dealerDom.innerText = `PLAYER HAS WON!`
     }  else if ( playerTotalWithAce < 21 && dealerTotalWithAce < 21) {
         dealerTotalWithAce > playerTotalWithAce ? dealerDom.innerText = `PLAYER HAS LOST` : dealerDom.innerText = `PLAYER HAS WON!`
-    } 
+    } else {
+        playerTotal === `busts` && playerTotalWithAce === `busts` ? dealerDom.innerText = `PLAYER HAS LOST` : dealerDom.innerText = `PLAYER HAS WON!`
+    }
 }
 //reset playing field, DOM, and all global varibale to their initial state. currently called by event listener on the reset button/ This is for testing only and will be integrated into the stay() function once complete
 function reset(){
