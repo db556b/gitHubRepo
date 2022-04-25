@@ -1,6 +1,11 @@
 
 //get deck
 let deckId =''
+let card
+let image
+let value
+let playerValue
+let playerImage
 //tracks total number of cards left throughout the game
 let cardsLeft 
 //player's total w/ and w/o an ace (+11 in with ace category) and tracks if the player has been dealt an ace
@@ -29,26 +34,60 @@ function newDeck(x){
   }
 }
 //draw starting cards, puts their image in the DOM, and adds the total value of each card to their pertinent total global variable
-
-document.getElementById('deal').addEventListener('click', deal)
+document.getElementById('deal').addEventListener('click', populateDeal)
 document.getElementById('hit').addEventListener('click', hit)
 document.getElementById('stay').addEventListener('click', stay)
 document.getElementById('reset').addEventListener('click', reset)
 let imageSrc = "assets/images/backOfCard.png"
-function deal(){
+
+async function populateDeal(){
     reset()
-    const url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=3`
+    imageSrc = "assets/images/backOfCard.png"
+    let img = document.createElement('img')
+    img.setAttribute('id', 'dealerFirstCard')
+    img.src = imageSrc
+    document.getElementById('top').appendChild(img)
+    await timer(300)
+    dealerSecondCard()
+    await timer(300)
+    deal()
+    await timer(300)
+    deal()
+}
+
+
+
+function dealerSecondCard(){
+    const img = document.createElement('img')
+    drawOneCard()
+    timer(100)
+    img.src = image
+    document.getElementById('top').appendChild(img)
+}
+
+function drawOneCard(){
+    const url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`
     fetch(url)
         .then(res => res.json()) // parse response as JSON
         .then(data => {
         console.log(data)
-        populateDeal(data)
-        loopThroughCards(data.cards)
         cardsLeft = data.remaining
+        image = data.cards[0].image
+        value = data.cards[0].value
+     //   loopThroughCards(data.cards)
+
     })
         .catch(err => {
         console.log(`error ${err}`)
 });
+}
+
+
+function deal(){
+    drawOneCard()
+    img = document.createElement('img')
+    img.src = image
+    document.getElementById('bottom').appendChild(img)
 }
 
 //functionality of a hit in blackjack. calls function to add total to player's score and displays new card to the DOM
@@ -82,22 +121,22 @@ async function stay(){
 }
 
 //This function populates the initial deal of three cards to the Dom. Called in the deal() function
-function populateDeal(data){
-    imageSrc = "assets/images/backOfCard.png"
-    const img0 = document.createElement('img')
-    img0.src = data.cards[0].image
-    document.getElementById('bottom').appendChild(img0)
-    const img1 = document.createElement('img')
-    img1.src = data.cards[1].image
-    document.getElementById('bottom').appendChild(img1)
-    const img3 = document.createElement('img')
-    img3.setAttribute('id', 'dealerFirstCard')
-    img3.src = imageSrc
-    document.getElementById('top').appendChild(img3)
-    const img2 = document.createElement('img')
-    img2.src = data.cards[2].image
-    document.getElementById('top').appendChild(img2)
-}
+// function populateDeal(data){
+//     imageSrc = "assets/images/backOfCard.png"
+//     const img0 = document.createElement('img')
+//     img0.src = data.cards[0].image
+//     document.getElementById('bottom').appendChild(img0)
+//     const img1 = document.createElement('img')
+//     img1.src = data.cards[1].image
+//     document.getElementById('bottom').appendChild(img1)
+//     const img3 = document.createElement('img')
+//     img3.setAttribute('id', 'dealerFirstCard')
+//     img3.src = imageSrc
+//     document.getElementById('top').appendChild(img3)
+//     const img2 = document.createElement('img')
+//     img2.src = data.cards[2].image
+//     document.getElementById('top').appendChild(img2)
+// }
 
 //function to extract values of cards
 function getValues(x){
@@ -113,33 +152,33 @@ function getValues(x){
 }
 
 //This function loops through the initial deal; extracts the value of each of the cards and then adds to the cumulative value of the dealer's and player's hands
-function loopThroughCards(object){
-    object.forEach((e,i) => {
-        let value = getValues(e.value)
-        console.log(value)
-        if (i < 2){
-            if (value === 11){
-                playerHasAce = true
-                playerTotal += 1
-                playerTotalWithAce += 11
-                updatePlayerDom()
-            } else {
-                playerTotal += value
-                playerTotalWithAce += value
-                updatePlayerDom()
-            }
-        } else {
-            if (value === 11){
-                dealerHasAce = true
-                dealerTotal += 1
-                dealerTotalWithAce += 11
-            } else {
-                dealerTotal += value
-                dealerTotalWithAce += value
-        }
-    }
-    })
-}
+// function loopThroughCards(object){
+//     object.forEach((e,i) => {
+//         let value = getValues(e.value)
+//         console.log(value)
+//         if (i < 2){
+//             if (value === 11){
+//                 playerHasAce = true
+//                 playerTotal += 1
+//                 playerTotalWithAce += 11
+//                 updatePlayerDom()
+//             } else {
+//                 playerTotal += value
+//                 playerTotalWithAce += value
+//                 updatePlayerDom()
+//             }
+//         } else {
+//             if (value === 11){
+//                 dealerHasAce = true
+//                 dealerTotal += 1
+//                 dealerTotalWithAce += 11
+//             } else {
+//                 dealerTotal += value
+//                 dealerTotalWithAce += value
+//         }
+//     }
+//     })
+// }
 
 //this function called in the stay() function extracts the value of the card and then saves the value into the cumulative dealer hand values and updates the dom with the values
 function addValueOfNewCardDealer(object){
