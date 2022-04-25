@@ -79,6 +79,7 @@ function hit(){
 async function stay(){
     document.getElementById('deal').disabled = true
     document.getElementById('hit').disabled = true
+    document.getElementById('stay').disabled = true
     let i = 1
     while (dealerTotal < 17 && dealerTotalWithAce <= 17 || dealerTotal < 17 && dealerTotalWithAce > 21 && i >= 2){
         getDealerCard()
@@ -86,6 +87,7 @@ async function stay(){
         i++
     }
     document.getElementById('deal').disabled = false
+   
 }
 
 //This function populates the initial deal of three cards to the Dom. Called in the deal() function
@@ -179,6 +181,10 @@ function addValueOfNewCardPlayer(object){
   //  console.log(playerTotal)
 }
 updatePlayerDom()
+if (playerTotal > 21 && playerTotalWithAce > 21){
+    document.getElementById('hit').disabled = true
+    stay()
+}
 }
 //compare to find winner
 
@@ -194,6 +200,7 @@ function reset(){
     playerHasAce = false
     dealerHasAce = false
     document.getElementById('hit').disabled = false
+    document.getElementById('stay').disabled = false
     document.getElementById('dealer').innerText = `DEALER`
 }
 
