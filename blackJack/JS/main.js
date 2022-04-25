@@ -2,7 +2,7 @@
 //get deck
 let deckId =''
 //tracks total number of cards left throughout the game
-let cardsLeft
+let cardsLeft 
 //player's total w/ and w/o an ace (+11 in with ace category) and tracks if the player has been dealt an ace
 let playerTotal = 0
 let playerTotalWithAce = 0
@@ -12,15 +12,8 @@ let dealerTotal = 0
 let dealerTotalWithAce = 0
 let dealerHasAce = false
 
-fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
-      .then(res => res.json()) // parse response as JSON
-      .then(data => {
-        deckId = data.deck_id
-      })
-      .catch(err => {
-          console.log(`error ${err}`)
-      });
 
+newDeck(14)
 // retrieves new deck when the total cards available in the deck reaches less than 15
 function newDeck(x){
   if (x < 15){
