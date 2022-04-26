@@ -3,6 +3,7 @@
 let deckId = localStorage.getItem(`deckId`)
 let playerWins = localStorage.getItem('playerWins') || 0
 let handsPlayed = localStorage.getItem('handsPlayed') || 0
+let handsPushed = localStorage.getItem('handsPushed') || 0
 //tracks total number of cards left throughout the game
 let cardsLeft
 //player's total w/ and w/o an ace (+11 in with ace category) and tracks if the player has been dealt an ace
@@ -22,6 +23,9 @@ if (!playerWins){
 }
 if (!handsPlayed){
     localStorage.setItem('handsPlayed', handsPlayed)
+} 
+if (!handsPushed){
+    localStorage.setItem('handsPushed', handsPushed)
 } 
 if (!deckId){
     fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
@@ -56,7 +60,6 @@ document.getElementById('stay').addEventListener('click', stay)
 let imageSrc = "assets/images/backOfCard.png"
 function deal(){
     reset()
-    localStorage.setItem('deckId', `${deckId}`)
     const url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=3`
     fetch(url)
         .then(res => res.json()) // parse response as JSON
@@ -74,6 +77,9 @@ handsPlayed++
 localStorage.setItem('handsPlayed', handsPlayed)
 document.getElementById('numberOfWins').innerText = `Number of wins: ${playerWins}`
 document.getElementById('numberOfHands').innerText = `Number of hands: ${handsPlayed}`
+document.getElementById('handsPushed').innerText = `Number of pushes: ${handsPushed}`
+localStorage.setItem('deckId', `${deckId}`)
+autoStayOn21()
 }
 
 //functionality of a hit in blackjack. calls function to add total to player's score and displays new card to the DOM
@@ -169,6 +175,7 @@ function loopThroughCards(object){
         }
     }
     })
+    autoStayOn21()
 }
 
 //this function called in the stay() function extracts the value of the card and then saves the value into the cumulative dealer hand values and updates the dom with the values
@@ -224,8 +231,16 @@ function addValueOfNewCardPlayer(object){
         document.getElementById('hit').disabled = true
         stay()
     }
+    autoStayOn21()
     updatePlayerDom()
     }
+
+//This function auotmatically runs stay() when the player's total is 21
+function autoStayOn21(){
+    if(playerTotal === 21 || playerTotalWithAce === 21){
+        stay()
+    }
+}
 //compare to find winner
 function dealerScore(){
     if (dealerTotalWithAce > 100){
@@ -244,6 +259,8 @@ function playerScore(){
 function compareScores(){
     if (dealerFinalTotal === playerFinalTotal){
         dealerDom.innerText += ` HAND IS A PUSH.`
+        handsPushed++
+        localStorage.setItem('handsPushed', handsPushed)
     } else if ( dealerFinalTotal > 100 && playerFinalTotal < 22){
         dealerDom.innerText += ` PLAYER WINS!`
         playerWins++
@@ -308,7 +325,7 @@ function getDealerCard(){
         playerDom.innerText = `PLAYER BUSTS! `
       } else if (playerTotalWithAce === 21 || playerTotal === 21){
           playerDom.innerText = `PLAYER HAS 21!`
-      } else if (playerHasAce === true && playerTotalWithAce < 20) {
+      } else if (playerHasAce === true && playerTotalWithAce <= 20) {
         playerDom.innerText = `PLAYER HAS SOFT ${playerTotalWithAce}. `
       } else {
           playerDom.innerText = `PLAYER HAS ${playerTotal}. `
