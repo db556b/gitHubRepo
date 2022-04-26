@@ -13,6 +13,8 @@ let dealerTotalWithAce = 0
 let dealerHasAce = false
 let playerDom = document.getElementById('player')
 let dealerDom = document.getElementById('dealer')
+let dealerFinalTotal = 0
+let playerFinalTotal = 0
 
 fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
       .then(res => res.json()) // parse response as JSON
@@ -42,7 +44,7 @@ function newDeck(x){
 document.getElementById('deal').addEventListener('click', deal)
 document.getElementById('hit').addEventListener('click', hit)
 document.getElementById('stay').addEventListener('click', stay)
-document.getElementById('reset').addEventListener('click', reset)
+//document.getElementById('reset').addEventListener('click', reset)
 let imageSrc = "assets/images/backOfCard.png"
 function deal(){
     reset()
@@ -83,12 +85,15 @@ async function stay(){
     document.getElementById('hit').disabled = true
     document.getElementById('stay').disabled = true
     let i = 1
-    while (dealerTotal < 17 && dealerTotalWithAce <= 17 || dealerTotal < 17 && dealerTotalWithAce > 21 && i >= 2){
+    while (dealerTotal < 17 && dealerTotalWithAce <= 17 || dealerTotal < 17 && dealerTotalWithAce > 100 ){
         getDealerCard()
         await timer(500)
         i++
     }
     document.getElementById('deal').disabled = false
+   dealerScore()
+   playerScore()
+   await timer(200)
    compareScores()
 }
 
@@ -155,7 +160,7 @@ function loopThroughCards(object){
 //this function called in the stay() function extracts the value of the card and then saves the value into the cumulative dealer hand values and updates the dom with the values
 function addValueOfNewCardDealer(object){
     let value = getValues(object)
-    if (value === 11){
+    if (value === 11 && dealerHasAce === false){
     dealerHasAce = true
     dealerTotal += 1
     dealerTotalWithAce += 11
@@ -165,18 +170,20 @@ function addValueOfNewCardDealer(object){
     dealerTotalWithAce += value
   //  console.log(dealerTotal)
 }
-updateDealerDom()
-if (dealerTotalWithAce > 21 && dealerTotal > 21){
-    dealerTotal = `bust`
-    dealerTotalWithAce = 'bust'
+if (dealerTotalWithAce > 21 ){
+    dealerTotalWithAce = 1000
 }
+if (dealerTotal > 21){
+    dealerTotal = 1000
+}
+updateDealerDom()
 }
 
 
 //this function called in the hit() function extracts the value of the card and then saves the value into the cumulative player hand values and updates the dom with the values
 function addValueOfNewCardPlayer(object){
     let value = getValues(object)
-    if (value === 11){
+    if (value === 11 && playerHasAce === false){
     playerHasAce = true
     playerTotal += 1
     playerTotalWithAce += 11
@@ -186,26 +193,45 @@ function addValueOfNewCardPlayer(object){
     playerTotalWithAce += value
   //  console.log(playerTotal)
 }
-updatePlayerDom()
-if (playerTotal > 21 && playerTotalWithAce > 21){
+if (playerTotalWithAce > 21){
+    playerTotalWithAce = 1000
+}
+if (playerTotal > 21){
+    playerTotal = 1000
+}
+
+if (playerTotal > 100 && playerTotalWithAce > 100){
     document.getElementById('hit').disabled = true
     stay()
 }
-if (playerTotalWithAce > 21 && playerTotal > 21){
-    playerTotal = `bust`
-    playerTotalWithAce = 'bust'
-}
+updatePlayerDom()
 }
 //compare to find winner
-function compareScores(){
-    if (playerTotalWithAce === dealerTotalWithAce){
-        dealerDom.innerText = `HAND IS A PUSH`
-    } else if (playerTotalWithAce === `bust` && dealerTotalWithAce === `bust`){
-        dealerTotal > playerTotal ? dealerDom.innerText = `PLAYER HAS LOST` : dealerDom.innerText = `PLAYER HAS WON!`
-    }  else if ( playerTotalWithAce < 21 && dealerTotalWithAce < 21) {
-        dealerTotalWithAce > playerTotalWithAce ? dealerDom.innerText = `PLAYER HAS LOST` : dealerDom.innerText = `PLAYER HAS WON!`
+function dealerScore(){
+    if (dealerTotalWithAce > 100){
+        dealerFinalTotal = dealerTotal
     } else {
-        playerTotal === `busts` && playerTotalWithAce === `busts` ? dealerDom.innerText = `PLAYER HAS LOST` : dealerDom.innerText = `PLAYER HAS WON!`
+        dealerFinalTotal = dealerTotalWithAce
+    }
+}
+function playerScore(){
+    if (playerTotalWithAce > 100){
+        playerFinalTotal = playerTotal
+    } else {
+        playerFinalTotal = playerTotalWithAce
+    }
+}
+function compareScores(){
+    if (dealerFinalTotal === playerFinalTotal){
+        dealerDom.innerText += ` HAND IS A PUSH.`
+    } else if ( dealerFinalTotal > 100 && playerFinalTotal < 22){
+        dealerDom.innerText += ` PLAYER WINS!`
+    } else if ( playerFinalTotal > 100 && dealerFinalTotal < 22 ){
+        dealerDom.innerText += ` DEALER WINS!`
+    } else if ( playerFinalTotal > dealerFinalTotal){
+        dealerDom.innerText += ` PLAYER WINS!`
+    } else {
+        dealerDom.innerText += ` DEALER WINS!`
     }
 }
 //reset playing field, DOM, and all global varibale to their initial state. currently called by event listener on the reset button/ This is for testing only and will be integrated into the stay() function once complete
@@ -254,25 +280,26 @@ function getDealerCard(){
 
   // this function updates the player's portion of the DOM to display the player's current total.
   function updatePlayerDom(){
-      if (playerTotal > 21 && playerTotalWithAce > 21){
-        playerDom.innerText = `PLAYER BUSTS!`
+      if (playerTotal > 100  && playerTotalWithAce > 100 ){
+        playerDom.innerText = `PLAYER BUSTS! `
       } else if (playerTotalWithAce === 21 || playerTotal === 21){
-          playerDom.innerText = `PLAYER HAS 21!!`
+          playerDom.innerText = `PLAYER HAS 21!`
       } else if (playerHasAce === true && playerTotalWithAce < 20) {
-        playerDom.innerText = `PLAYER HAS SOFT ${playerTotalWithAce}`
+        playerDom.innerText = `PLAYER HAS SOFT ${playerTotalWithAce}. `
       } else {
-          playerDom.innerText = `PLAYER HAS ${playerTotal}`
+          playerDom.innerText = `PLAYER HAS ${playerTotal}. `
       }
   }
 // this function updates the dealer's portion of the DOM to display the dealer's current total.
   function updateDealerDom(){
-    if (dealerTotal > 21 && dealerTotalWithAce > 21){
-      dealerDom.innerText = `DEALER BUSTS!`
+      timer(100)
+    if (dealerTotal > 100 && dealerTotalWithAce > 100){
+      dealerDom.innerText = `DEALER BUSTS! `
     } else if (dealerTotalWithAce === 21 || dealerTotal === 21){
-        dealerDom.innerText = `DEALER HAS 21!!`
+        dealerDom.innerText = `DEALER HAS 21!`
     } else if (dealerHasAce === true && dealerTotalWithAce < 21) {
-      dealerDom.innerText = `DEALER HAS SOFT ${dealerTotalWithAce}`
+      dealerDom.innerText = `DEALER HAS SOFT ${dealerTotalWithAce}. `
     } else {
-        dealerDom.innerText = `DEALER HAS ${dealerTotal}`
+        dealerDom.innerText = `DEALER HAS ${dealerTotal}. `
     }
   }
