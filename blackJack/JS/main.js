@@ -44,7 +44,7 @@ function newDeck(x){
     .then(res => res.json()) // parse response as JSON
     .then(data => {
       deckId = data.deck_id
-      
+      localStorage.setItem('deckId', deckId)
     })
     .catch(err => {
         console.log(`error ${err}`)
@@ -68,8 +68,11 @@ function deal(){
         populateDeal(data)
         loopThroughCards(data.cards)
         cardsLeft = data.remaining
+
     })
         .catch(err => {
+        newDeck(2)
+        deal()
         console.log(`error ${err}`)
 });
 document.getElementById('deal').disabled = true
