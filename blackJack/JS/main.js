@@ -1,6 +1,8 @@
 
 //get deck
-let deckId =''
+let deckId = localStorage.getItem(`deckId`)
+let playerWins = localStorage.getItem('playerWins') || 0
+let handsPlayed = localStorage.getItem('handsPlayed') || 0
 //tracks total number of cards left throughout the game
 let cardsLeft
 //player's total w/ and w/o an ace (+11 in with ace category) and tracks if the player has been dealt an ace
@@ -15,8 +17,14 @@ let playerDom = document.getElementById('player')
 let dealerDom = document.getElementById('dealer')
 let dealerFinalTotal = 0
 let playerFinalTotal = 0
-
-fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
+if (!playerWins){
+    localStorage.setItem('playerWins', 0)
+}
+if (!handsPlayed){
+    localStorage.setItem('handsPlayed', handsPlayed)
+} 
+if (!deckId){
+    fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
       .then(res => res.json()) // parse response as JSON
       .then(data => {
         deckId = data.deck_id
@@ -24,7 +32,7 @@ fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
       .catch(err => {
           console.log(`error ${err}`)
       });
-
+    }
 // retrieves new deck when the total cards available in the deck reaches less than 15
 function newDeck(x){
   if (x < 15){
@@ -48,6 +56,7 @@ document.getElementById('stay').addEventListener('click', stay)
 let imageSrc = "assets/images/backOfCard.png"
 function deal(){
     reset()
+    localStorage.setItem('deckId', `${deckId}`)
     const url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=3`
     fetch(url)
         .then(res => res.json()) // parse response as JSON
@@ -60,6 +69,11 @@ function deal(){
         .catch(err => {
         console.log(`error ${err}`)
 });
+document.getElementById('deal').disabled = true
+handsPlayed++
+localStorage.setItem('handsPlayed', handsPlayed)
+document.getElementById('numberOfWins').innerText = `Number of wins: ${playerWins}`
+document.getElementById('numberOfHands').innerText = `Number of hands: ${handsPlayed}`
 }
 
 //functionality of a hit in blackjack. calls function to add total to player's score and displays new card to the DOM
@@ -165,7 +179,10 @@ function addValueOfNewCardDealer(object){
     dealerTotal += 1
     dealerTotalWithAce += 11
   //  console.log(dealerTotal)
-} else {
+    } else if (value === 11 && dealerHasAce === true){
+        dealerTotal +=1
+        dealerTotalWithAce += 1
+    } else {
     dealerTotal += value
     dealerTotalWithAce += value
   //  console.log(dealerTotal)
@@ -188,24 +205,27 @@ function addValueOfNewCardPlayer(object){
     playerTotal += 1
     playerTotalWithAce += 11
     console.log(playerTotal)
-} else {
+    } else if (value === 11 && playerHasAce === true){
+        playerTotal +=1
+        playerTotalWithAce += 1
+    } else {
     playerTotal += value
     playerTotalWithAce += value
   //  console.log(playerTotal)
-}
-if (playerTotalWithAce > 21){
-    playerTotalWithAce = 1000
-}
-if (playerTotal > 21){
-    playerTotal = 1000
-}
+    }
+    if (playerTotalWithAce > 21){
+        playerTotalWithAce = 1000
+    }
+    if (playerTotal > 21){
+        playerTotal = 1000
+    }
 
-if (playerTotal > 100 && playerTotalWithAce > 100){
-    document.getElementById('hit').disabled = true
-    stay()
-}
-updatePlayerDom()
-}
+    if (playerTotal > 100 && playerTotalWithAce > 100){
+        document.getElementById('hit').disabled = true
+        stay()
+    }
+    updatePlayerDom()
+    }
 //compare to find winner
 function dealerScore(){
     if (dealerTotalWithAce > 100){
@@ -226,10 +246,14 @@ function compareScores(){
         dealerDom.innerText += ` HAND IS A PUSH.`
     } else if ( dealerFinalTotal > 100 && playerFinalTotal < 22){
         dealerDom.innerText += ` PLAYER WINS!`
+        playerWins++
+        localStorage.setItem('playerWins', playerWins)
     } else if ( playerFinalTotal > 100 && dealerFinalTotal < 22 ){
         dealerDom.innerText += ` DEALER WINS!`
     } else if ( playerFinalTotal > dealerFinalTotal){
         dealerDom.innerText += ` PLAYER WINS!`
+        playerWins++
+        localStorage.setItem('playerWins', playerWins)
     } else {
         dealerDom.innerText += ` DEALER WINS!`
     }

@@ -77,14 +77,21 @@ h2{
 img {
 	height: 22vh;
 }
-
-footer {
+div{
+	width: 100vw;	
+	height: 5vh;
+	display: flex;
+	justify-content: center;
+	padding-top: 1rem;
+}
+.footer {
 	height: 10vh;
 	width: 50vw;
 	display: flex;
 	justify-content: center;
 	padding-top: 1rem;
 }
+
 button{
 	background: radial-gradient(rgb(159, 103, 197),darkorchid,rgb(66, 5, 122));
 	border-radius: .5rem;
