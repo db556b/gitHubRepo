@@ -107,17 +107,15 @@ async function stay(){
     document.getElementById('deal').disabled = true
     document.getElementById('hit').disabled = true
     document.getElementById('stay').disabled = true
-    let i = 1
     while (dealerTotal < 17 && dealerTotalWithAce <= 17 || dealerTotal < 17 && dealerTotalWithAce > 100 ){
         getDealerCard()
-        await timer(500)
-        i++
+        await timer(750)
     }
-    document.getElementById('deal').disabled = false
    dealerScore()
    playerScore()
-   await timer(200)
+   await timer(600)
    compareScores()
+   document.getElementById('deal').disabled = false
 }
 
 //This function populates the initial deal of three cards to the Dom. Called in the deal() function
@@ -155,27 +153,10 @@ function getValues(x){
 function loopThroughCards(object){
     object.forEach((e,i) => {
         let value = getValues(e.value)
-        console.log(value)
         if (i < 2){
-            if (value === 11){
-                playerHasAce = true
-                playerTotal += 1
-                playerTotalWithAce += 11
-                updatePlayerDom()
-            } else {
-                playerTotal += value
-                playerTotalWithAce += value
-                updatePlayerDom()
-            }
+            addValueOfNewCardPlayer(value)
         } else {
-            if (value === 11){
-                dealerHasAce = true
-                dealerTotal += 1
-                dealerTotalWithAce += 11
-            } else {
-                dealerTotal += value
-                dealerTotalWithAce += value
-        }
+            addValueOfNewCardDealer(value)
     }
     })
     autoStayOn21()
@@ -231,7 +212,6 @@ function addValueOfNewCardPlayer(object){
     }
 
     if (playerTotal > 100 && playerTotalWithAce > 100){
-        document.getElementById('hit').disabled = true
         stay()
     }
     autoStayOn21()
@@ -341,7 +321,7 @@ function getDealerCard(){
       dealerDom.innerText = `DEALER BUSTS! `
     } else if (dealerTotalWithAce === 21 || dealerTotal === 21){
         dealerDom.innerText = `DEALER HAS 21!`
-    } else if (dealerHasAce === true && dealerTotalWithAce < 21) {
+    } else if (dealerHasAce === true && dealerTotalWithAce < 20) {
       dealerDom.innerText = `DEALER HAS SOFT ${dealerTotalWithAce}. `
     } else {
         dealerDom.innerText = `DEALER HAS ${dealerTotal}. `

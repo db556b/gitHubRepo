@@ -117,7 +117,11 @@ button:disabled:hover{
 	background: radial-gradient(rgb(66,5,122),darkorchid,rgb(159,103,197));
 	border: none;
 }
-
+#rules {
+	color: rgb(32, 2, 59);
+	font-size: 1.25rem;
+	z-index: -1;
+}
 
 /* media queries */
 
@@ -169,5 +173,8 @@ button:disabled:hover{
 		display: flex;
 		align-items: center;
 		padding: 0;
+	}
+	#rules {
+		font-size: .6rem;
 	}
 }
