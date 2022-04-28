@@ -36,7 +36,8 @@ body {
 	line-height: 1;
 	background: radial-gradient(rgb(159, 103, 197),darkorchid,rgb(66, 5, 122),rgb(49, 0, 95));
 	font-size: 1.5rem;
-	height: 100vh
+	height: 100vh;
+	color: rgb(92, 3, 175);
 }
 ol, ul {
 	list-style: none;
@@ -94,12 +95,30 @@ div{
 button{
 	background: radial-gradient(rgb(159, 103, 197),darkorchid,rgb(66, 5, 122));
 	border-radius: .5rem;
-	border: .01rem solid rgb(53, 51, 51);
+	border: .1rem solid rgb(66,5,122);
 	height: 3rem;
 	width: 15%;
 	margin: 0 .25rem 0 .25rem;
 	padding: 0 .5rem 0 .5rem;
+	font-weight: 300;
+	font-size: 2rem;
+	color:rgb(66,5,122)
 }
+button:disabled{
+	/* color: rgb(159, 97, 198); */
+	background: radial-gradient(rgb(66,5,122),darkorchid,rgb(159,103,197));
+	border: none;
+}
+button:hover{
+	background: radial-gradient(rgb(192, 135, 230),darkorchid);
+	border: .15rem solid rgb(66,5,122);
+}
+button:disabled:hover{
+	background: radial-gradient(rgb(66,5,122),darkorchid,rgb(159,103,197));
+	border: none;
+}
+
+
 /* media queries */
 
 @media screen and (max-width: 460px){
@@ -108,6 +127,7 @@ button{
 	}
 	h2{
 		font-size: 1.75rem;
+		color:rgb(25, 3, 46)
 	}
 	.top, .bottom{
 		height: 35vh;
@@ -124,10 +144,11 @@ button{
 	}
 	button{
 		width: 80%;
-		height: 3rem;
-		margin: 0 0 .5rem 0;
-		padding: .75rem 0 .75rem 0;
+		height: 2.2rem;
+		margin: 0 .05rem .5rem .05rem;
+		padding: 0 ;
 		background: radial-gradient(rgb(159, 97, 198),rgb(129, 38, 181),rgb(181, 53, 255));
+		font-size: 1rem;
 		/* color: gray; */
 	}
 	#player{
