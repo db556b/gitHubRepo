@@ -261,21 +261,21 @@ function playerScore(){
 }
 function compareScores(){
     if (dealerFinalTotal === playerFinalTotal){
-        dealerDom.innerText += ` HAND IS A PUSH.`
+        dealerDom.innerText = ` HAND IS A PUSH.`
         handsPushed++
         localStorage.setItem('handsPushed', handsPushed)
     } else if ( dealerFinalTotal > 100 && playerFinalTotal < 22){
-        dealerDom.innerText += ` PLAYER WINS!`
+        dealerDom.innerText = ` PLAYER WINS!`
         playerWins++
         localStorage.setItem('playerWins', playerWins)
     } else if ( playerFinalTotal > 100 && dealerFinalTotal < 22 ){
-        dealerDom.innerText += ` DEALER WINS!`
+        dealerDom.innerText = ` DEALER WINS!`
     } else if ( playerFinalTotal > dealerFinalTotal){
-        dealerDom.innerText += ` PLAYER WINS!`
+        dealerDom.innerText = ` PLAYER WINS!`
         playerWins++
         localStorage.setItem('playerWins', playerWins)
     } else {
-        dealerDom.innerText += ` DEALER WINS!`
+        dealerDom.innerText = ` DEALER WINS!`
     }
 }
 //reset playing field, DOM, and all global varibale to their initial state. currently called by event listener on the reset button/ This is for testing only and will be integrated into the stay() function once complete
