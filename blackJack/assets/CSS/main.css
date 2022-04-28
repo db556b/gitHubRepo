@@ -119,11 +119,12 @@ button{
 		display: flex;
 		justify-content: center;
 		padding: 0 .5rem .5rem .5rem;
+		margin-bottom: .5rem
 	}
 	button{
 		width: 80%;
 		height: 3rem;
-		margin: 0 0 0 0;
+		margin: 0 0 .5rem 0;
 		padding: .75rem 0 .75rem 0;
 		background: radial-gradient(rgb(159, 97, 198),rgb(129, 38, 181),rgb(181, 53, 255));
 		/* color: gray; */
