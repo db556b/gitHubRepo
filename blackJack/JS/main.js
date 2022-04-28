@@ -78,9 +78,9 @@ function deal(){
 document.getElementById('deal').disabled = true
 handsPlayed++
 localStorage.setItem('handsPlayed', handsPlayed)
-document.getElementById('numberOfWins').innerText = `Number of wins: ${playerWins}`
-document.getElementById('numberOfHands').innerText = `Number of hands: ${handsPlayed}`
-document.getElementById('handsPushed').innerText = `Number of pushes: ${handsPushed}`
+document.getElementById('numberOfWins').innerText = `Wins: ${playerWins}`
+document.getElementById('numberOfHands').innerText = `Hands: ${handsPlayed}`
+document.getElementById('handsPushed').innerText = `Pushes: ${handsPushed}`
 localStorage.setItem('deckId', `${deckId}`)
 autoStayOn21()
 }
