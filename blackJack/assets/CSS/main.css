@@ -121,7 +121,7 @@ button:disabled:hover{
 
 /* media queries */
 
-@media screen and (max-width: 460px){
+@media screen and (max-width: 541px){
 	img{
 		height: 16vh;
 	}
