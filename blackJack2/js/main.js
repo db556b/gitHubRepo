@@ -84,9 +84,6 @@ function updateDom(person){
           person.dom.innerText = `${person.person} HAS ${person.total}. `
       }
 }
-MakePlayer.prototype.updateDom = function(){
-    updateDom()
-}
 document.getElementById('deal').addEventListener('click', deal)
 document.getElementById('hit').addEventListener('click', hit)
 document.getElementById('stay').addEventListener('click', stay)
