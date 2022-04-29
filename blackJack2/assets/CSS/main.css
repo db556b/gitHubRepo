@@ -1,0 +1,180 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+*{
+    box-sizing: border-box;
+  }
+  
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 67.5%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+	background: radial-gradient(rgb(159, 103, 197),darkorchid,rgb(66, 5, 122),rgb(49, 0, 95));
+	font-size: 1.5rem;
+	height: 100vh;
+	color: rgb(92, 3, 175);
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+section{
+	display: flex;
+	justify-content: center;
+	/* padding-bottom: 2rem; */
+}
+h2{
+	font-size: 2rem;
+}
+.top, .bottom{
+	display: flex;
+    /* border: 2px solid red; */
+    height: 25vh;
+	justify-content: center;
+	align-items: center;
+}
+img {
+	height: 22vh;
+}
+footer{
+	display: flex;
+	justify-content: center;
+	height: 10vh;
+}
+div{
+	width: 55vw;	
+	height: 5vh;
+	display: flex;
+	justify-content: space-evenly;
+	padding: .5rem .5rem 0 .5rem;
+}
+#footer {
+	height: 10vh;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	padding-top: 1rem;
+}
+
+button{
+	background: radial-gradient(rgb(159, 103, 197),darkorchid,rgb(66, 5, 122));
+	border-radius: .5rem;
+	border: .1rem solid rgb(66,5,122);
+	height: 3rem;
+	width: 15%;
+	margin: 0 .25rem 0 .25rem;
+	padding: 0 .5rem 0 .5rem;
+	font-weight: 300;
+	font-size: 2rem;
+	color:rgb(66,5,122)
+}
+button:disabled{
+	/* color: rgb(159, 97, 198); */
+	background: radial-gradient(rgb(66,5,122),darkorchid,rgb(159,103,197));
+	border: none;
+}
+button:hover{
+	background: radial-gradient(rgb(192, 135, 230),darkorchid);
+	border: .15rem solid rgb(66,5,122);
+}
+button:disabled:hover{
+	background: radial-gradient(rgb(66,5,122),darkorchid,rgb(159,103,197));
+	border: none;
+}
+#rules {
+	color: rgb(32, 2, 59);
+	font-size: 1.25rem;
+	z-index: -1;
+}
+
+/* media queries */
+
+@media screen and (max-width: 541px){
+	img{
+		height: 16vh;
+	}
+	h2{
+		font-size: 1.75rem;
+		color:rgb(25, 3, 46)
+	}
+	.top, .bottom{
+		height: 35vh;
+		flex-wrap: wrap;
+		flex-basis: content;
+	}
+	#footer {
+		height: 5vh;
+		width: 100vw;
+		display: flex;
+		justify-content: center;
+		padding: 0 .5rem .5rem .5rem;
+		margin-bottom: .5rem
+	}
+	button{
+		width: 80%;
+		height: 2.2rem;
+		margin: 0 .05rem .5rem .05rem;
+		padding: 0 ;
+		background: radial-gradient(rgb(159, 97, 198),rgb(129, 38, 181),rgb(181, 53, 255));
+		font-size: 1rem;
+		/* color: gray; */
+	}
+	#player{
+		margin-bottom:1rem;
+	}
+	footer{ 
+		flex-direction: column;
+		align-items: center;
+		
+	}
+	p {
+		font-size: 1.3rem;
+		padding: 1rem;
+		color:gray;
+	}
+	div{
+		width: 100%;
+		display: flex;
+		align-items: center;
+		padding: 0;
+	}
+	#rules {
+		font-size: .6rem;
+	}
+}
