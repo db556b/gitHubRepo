@@ -30,7 +30,25 @@ class MakeGame {
           });
         }
       }
-
+      compareScores(){
+        if (dealer.finalTotal === player.finalTotal){
+            dealer.dom.innerText = ` HAND IS A PUSH.`
+//            handsPushed++
+//            localStorage.setItem('handsPushed', handsPushed)
+        } else if ( dealer.finalTotal > 100 && player.finalTotal < 22){
+            dealer.dom.innerText = ` PLAYER WINS!`
+//            playerWins++
+//            localStorage.setItem('playerWins', playerWins)
+        } else if ( player.finalTotal > 100 && dealer.finalTotal < 22 ){
+            dealer.dom.innerText = ` DEALER WINS!`
+        } else if ( player.finalTotal > dealer.finalTotal){
+            dealer.dom.innerText = ` PLAYER WINS!`
+//            playerWins++
+//            localStorage.setItem('playerWins', playerWins)
+        } else {
+            dealer.dom.innerText = ` DEALER WINS!`
+        }
+    }
     
 }
 
@@ -46,14 +64,14 @@ class MakePlayer {
         this.hasAce = false
         this.person = person
         this.dom = document.getElementById(`${this.person}`)
-        this.domPics = document.getElementById(`${this.person}Two`)
         this.currentCard
         this.finalTotal
+        this.firstCard = 
     }
     
 // declares methods with player and card (passed as person parameter) classes to add value of card to pertinent total 
-    addValueOfCard( object ){
-        let value = this.getValues(this.currentCard)
+    addValueOfCard(){
+        let value = this.getValues()
         if (value === 11 && this.hasAce === false){
         this.hasAce = true
         this.total += 1
@@ -78,8 +96,8 @@ class MakePlayer {
 
 // declares method to extract value of card from fetch 
 
-    getValues(x){
-        console.log(x)
+    getValues(){
+        let x = this.currentCard.value
         if (x === 'KING' || x === 'QUEEN' || x === 'JACK'){
             return 10
             } else if (x === 'ACE') {
@@ -104,20 +122,39 @@ class MakePlayer {
           }
     }
 
+    placeImages(){
+        const img = document.createElement('img')
+        img.src = this.currentCard.image
+        document.getElementById(`${this.person}Images`).appendChild(img) 
+    }
+    getCard(){
+        const url = `https://deckofcardsapi.com/api/deck/${game.deckId}/draw/?count=1`
+    fetch(url)
+        .then(res => res.json()) // parse response as JSON
+        .then(data => {
+        console.log(data)
+        this.currentCard = data.cards[0]
+        console.log(this.currentCard)
+    })
+        .catch(err => {
+        console.log(`error ${err}`)
+    });
+    }
 
-
-        placeImages(){
-            const img = document.createElement('img')
-            img.src = this.currentCard.cards[0].image
-            document.getElementById(`${this.domPics}`).appendChild(img) 
+    calculateFinalScore(){
+        if (this.totalWithAce > 100){
+            this.finalTotal = this.total
+        } else {
+            this.finalTotal = this.totalWithAce
         }
+    }  
 }
 
 
 
 document.getElementById('deal').addEventListener('click', deal)
 document.getElementById('hit').addEventListener('click', hit)
-// document.getElementById('stay').addEventListener('click', stay)
+document.getElementById('stay').addEventListener('click', stay)
 
 function deal(){
 
@@ -127,26 +164,44 @@ function deal(){
     if (game.cardsLeft < 15){
         game.newDeck()
         } 
-}
-async function getCard(user){
-    const url = `https://deckofcardsapi.com/api/deck/${game.deckId}/draw/?count=1`
-fetch(url)
-    .then(res => res.json()) // parse response as JSON
-    .then(data => {
-    await timer(200)
-    console.log(data)
-    user.currentCard = data
-})
-    .catch(err => {
-    console.log(`error ${err}`)
-});
+    document.getElementById('hit').disabled = false
+    document.getElementById('stay').disabled = false
+    player.dom.innerText= "PLAYER"
+    dealer.dom.innerText = "DEALER"
 }
 
-function hit(){
-    player.getCard('player')
-    player.addValueOfCard()
+
+
+async function hit(){
+    player.getCard()
+    await timer(500)
+    player.addValueOfCard(player.currentCard)
     player.updateDom()
     player.placeImages()
+    if (player.total > 100 && player.totalWithAce > 100){
+        stay()
+    }
+}
+
+async function stay(){
+    document.getElementById('deal').disabled = true
+    document.getElementById('hit').disabled = true
+    document.getElementById('stay').disabled = true
+    while (dealer.total < 17 && dealer.totalWithAce <= 17 || dealer.total < 17 && dealer.totalWithAce > 100 ){
+        dealer.getCard()
+        await timer(750)
+        dealer.addValueOfCard(dealer.currentCard)
+        dealer.updateDom()
+        dealer.placeImages()
+    }
+    player.calculateFinalScore()
+    dealer.calculateFinalScore()
+    game.compareScores()
+
+//    playerScore()
+//    await timer(600)
+//    compareScores()
+   document.getElementById('deal').disabled = false
 }
 
 
