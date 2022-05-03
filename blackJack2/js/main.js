@@ -3,8 +3,13 @@ let player
 let deckId
 let game
 let deck
+let imageSrc = "assets/images/backOfCard.png"
 //creates timer for async functions
 function timer(ms) { return new Promise(res => setTimeout(res, ms)); }
+document.getElementById('deal').addEventListener('click', deal)
+document.getElementById('hit').addEventListener('click', hit)
+document.getElementById('stay').addEventListener('click', stay)
+
 // creates class for new player
 class MakeGame {
     constructor ( deckId, cardsLeft ){
@@ -12,8 +17,19 @@ class MakeGame {
         this.cardsLeft = cardsLeft
     }
 
-    dealFirstCards(){
-
+    async dealFirstCards(){
+        dealer.getCard()
+        await timer(200)
+        dealer.placeImages()
+        dealer.addValueOfCard()
+        for (let i = 0; i < 2; i++){
+            player.getCard()
+            await timer(200)
+            player.placeImages()
+            player.addValueOfCard()
+            player.updateDom()
+            }
+        player.autoStayOn21()
     }
 
     newDeck(){
@@ -30,26 +46,25 @@ class MakeGame {
           });
         }
       }
-      compareScores(){
-        if (dealer.finalTotal === player.finalTotal){
-            dealer.dom.innerText = ` HAND IS A PUSH.`
-//            handsPushed++
-//            localStorage.setItem('handsPushed', handsPushed)
-        } else if ( dealer.finalTotal > 100 && player.finalTotal < 22){
-            dealer.dom.innerText = ` PLAYER WINS!`
-//            playerWins++
-//            localStorage.setItem('playerWins', playerWins)
-        } else if ( player.finalTotal > 100 && dealer.finalTotal < 22 ){
-            dealer.dom.innerText = ` DEALER WINS!`
-        } else if ( player.finalTotal > dealer.finalTotal){
-            dealer.dom.innerText = ` PLAYER WINS!`
-//            playerWins++
-//            localStorage.setItem('playerWins', playerWins)
-        } else {
-            dealer.dom.innerText = ` DEALER WINS!`
-        }
-    }
-    
+    compareScores(){
+      if (dealer.finalTotal === player.finalTotal){
+          dealer.dom.innerText = ` HAND IS A PUSH.`
+//             handsPushed++
+//             localStorage.setItem('handsPushed', handsPushed)
+      } else if ( dealer.finalTotal > 100 && player.finalTotal < 22){
+          dealer.dom.innerText = ` PLAYER WINS!`
+//             playerWins++
+//             localStorage.setItem('playerWins', playerWins)
+      } else if ( player.finalTotal > 100 && dealer.finalTotal < 22 ){
+          dealer.dom.innerText = ` DEALER WINS!`
+      } else if ( player.finalTotal > dealer.finalTotal){
+          dealer.dom.innerText = ` PLAYER WINS!`
+//             playerWins++
+//             localStorage.setItem('playerWins', playerWins)
+      } else {
+          dealer.dom.innerText = ` DEALER WINS!`
+      }
+    }  
 }
 
 if(!game){
@@ -66,7 +81,7 @@ class MakePlayer {
         this.dom = document.getElementById(`${this.person}`)
         this.currentCard
         this.finalTotal
-        this.firstCard = 
+        this.firstCard = imageSrc
     }
     
 // declares methods with player and card (passed as person parameter) classes to add value of card to pertinent total 
@@ -147,14 +162,13 @@ class MakePlayer {
         } else {
             this.finalTotal = this.totalWithAce
         }
-    }  
+    } 
+    autoStayOn21(){ 
+        if (player.total > 100 && player.totalWithAce > 100 || player.total === 21 || player.totalWithAce === 21){
+            stay()
+        }
+    }
 }
-
-
-
-document.getElementById('deal').addEventListener('click', deal)
-document.getElementById('hit').addEventListener('click', hit)
-document.getElementById('stay').addEventListener('click', stay)
 
 function deal(){
 
@@ -166,21 +180,20 @@ function deal(){
         } 
     document.getElementById('hit').disabled = false
     document.getElementById('stay').disabled = false
+    document.getElementById('playerImages').replaceChildren()
+    document.getElementById('dealerImages').replaceChildren()
     player.dom.innerText= "PLAYER"
     dealer.dom.innerText = "DEALER"
+    game.dealFirstCards()
 }
-
-
 
 async function hit(){
     player.getCard()
-    await timer(500)
+    await timer(200)
     player.addValueOfCard(player.currentCard)
     player.updateDom()
     player.placeImages()
-    if (player.total > 100 && player.totalWithAce > 100){
-        stay()
-    }
+    player.autoStayOn21()
 }
 
 async function stay(){
@@ -196,6 +209,7 @@ async function stay(){
     }
     player.calculateFinalScore()
     dealer.calculateFinalScore()
+    await timer (1000)
     game.compareScores()
 
 //    playerScore()
