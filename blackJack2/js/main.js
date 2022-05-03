@@ -198,6 +198,7 @@ function deal(){
         } 
     document.getElementById('hit').disabled = false
     document.getElementById('stay').disabled = false
+    document.getElementById('deal').disabled = true
     document.getElementById('playerImages').replaceChildren()
     document.getElementById('dealerImages').replaceChildren()
     player.dom.innerText= "PLAYER"
