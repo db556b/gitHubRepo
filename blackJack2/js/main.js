@@ -9,6 +9,7 @@ let deck
 let imageSrc = "assets/images/backOfCard.png"
 //creates timer for async functions
 function timer(ms) { return new Promise(res => setTimeout(res, ms)); }
+// sets local storage items for tracking player stats
 if (!playerWins){
     localStorage.setItem('playerWins', 0)
 }
@@ -28,7 +29,7 @@ class MakeGame {
         this.deckId = deckId
         this.cardsLeft = cardsLeft
     }
-
+    // deals the first cards for the "initial deal"
     async dealFirstCards(){
         dealer.getCard()
         await timer(200)
@@ -44,9 +45,8 @@ class MakeGame {
             }
         player.autoStayOn21()
     }
-
+    //gets new deck when # of cards left is less than 15
     newDeck(){
-        if (this.cardsLeft < 15){
             fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=10`)
           .then(res => res.json()) // parse response as JSON
           .then(data => {
@@ -56,8 +56,8 @@ class MakeGame {
           .catch(err => {
               console.log(`error ${err}`)
           });
-        }
       }
+      //compares scores  and updates DOM to display winner
     compareScores(){
       if (dealer.finalTotal === player.finalTotal){
           dealer.dom.innerText = ` HAND IS A PUSH.`
@@ -103,14 +103,12 @@ class MakePlayer {
         this.hasAce = true
         this.total += 1
         this.totalWithAce += 11
-        console.log(this.total)
         } else if (value === 11 && this.hasAce === true){
             this.total +=1
             this.totalWithAce += 1
         } else {
         this.total += value
         this.totalWithAce += value
-      console.log(this.total,this.totalWithAce)
         }
         if (this.totalWithAce > 21){
             this.totalWithAce = 1000
@@ -148,31 +146,32 @@ class MakePlayer {
               this.dom.innerText = `${this.person.toUpperCase()} HAS ${this.total}. `
           }
     }
+    //creates IMG for card when card is downcard
     placeFirstCard(){
         const img = document.createElement('img')
         img.src = imageSrc
         document.getElementById(`${this.person}Images`).appendChild(img) 
     }
-
+    //place images in the DOM
     placeImages(){
         const img = document.createElement('img')
         img.src = this.currentCard.image
         document.getElementById(`${this.person}Images`).appendChild(img) 
     }
+    //fetches new card from the card API
     getCard(){
         const url = `https://deckofcardsapi.com/api/deck/${game.deckId}/draw/?count=1`
     fetch(url)
         .then(res => res.json()) // parse response as JSON
         .then(data => {
-        console.log(data)
         this.currentCard = data.cards[0]
-        console.log(this.currentCard)
+        game.cardsLeft = data.remaining
     })
         .catch(err => {
         console.log(`error ${err}`)
     });
     }
-
+    //compares total and totalWithAce to determine which should be used for finalScore
     calculateFinalScore(){
         if (this.totalWithAce > 100){
             this.finalTotal = this.total
@@ -180,13 +179,14 @@ class MakePlayer {
             this.finalTotal = this.totalWithAce
         }
     } 
+    //forces autoStay when player has 21
     autoStayOn21(){ 
         if (player.total > 100 && player.totalWithAce > 100 || player.total === 21 || player.totalWithAce === 21){
             stay()
         }
     }
 }
-
+//initiates a new game, player, and dealer. gets a new deck when the current deck has less 
 function deal(){
     handsPlayed++
     localStorage.setItem('handsPlayed', handsPlayed)
@@ -229,7 +229,6 @@ async function stay(){
         if(i===0){
             const img = document.getElementById('dealerImages')
             img.removeChild(img.lastChild)
-            console.log(i)
         }
         i++
         dealer.placeImages()
