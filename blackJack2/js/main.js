@@ -3,7 +3,8 @@ let player
 let deckId
 let game
 let deck
-
+//creates timer for async functions
+function timer(ms) { return new Promise(res => setTimeout(res, ms)); }
 // creates class for new player
 class MakeGame {
     constructor ( deckId, cardsLeft ){
@@ -12,19 +13,6 @@ class MakeGame {
     }
 
     dealFirstCards(){
-        const url = `https://deckofcardsapi.com/api/deck/${game.deckId}/draw/?count=3`
-        fetch(url)
-            .then(res => res.json()) // parse response as JSON
-            .then(data => {
-            console.log(data)
-            // populateDeal(data)
-            // loopThroughCards(data.cards)
-            this.cardsLeft = data.remaining
-
-        })
-            .catch(err => {
-            console.log(`error ${err}`)
-    });
 
     }
 
@@ -43,15 +31,7 @@ class MakeGame {
         }
       }
 
-}
-class MakeDeck{
-    constructor (cardsLeft){
-        this.deckId 
-        this.cardsLeft = cardsLeft
-
-    }
-
-
+    
 }
 
 if(!game){
@@ -65,16 +45,17 @@ class MakePlayer {
         this.totalWithAce = 0
         this.hasAce = false
         this.person = person
-        this.dom = document.getElementById(`${this.person.toLowerCase()}`)
+        this.dom = document.getElementById(`${this.person}`)
+        this.domPics = document.getElementById(`${this.person}Two`)
         this.currentCard
         this.finalTotal
     }
     
 // declares methods with player and card (passed as person parameter) classes to add value of card to pertinent total 
     addValueOfCard( object ){
-        let value = getValues(object)
+        let value = this.getValues(this.currentCard)
         if (value === 11 && this.hasAce === false){
-        this.hasasAce = true
+        this.hasAce = true
         this.total += 1
         this.totalWithAce += 11
         console.log(this.total)
@@ -84,7 +65,7 @@ class MakePlayer {
         } else {
         this.total += value
         this.totalWithAce += value
-      //  console.log(playerTotal)
+      console.log(this.total,this.totalWithAce)
         }
         if (this.totalWithAce > 21){
             this.totalWithAce = 1000
@@ -111,23 +92,31 @@ class MakePlayer {
 
 // declares function for use as methods inside the dealer and player classes to update the DOM for player and dealer (passed as arguments)
 
-    updateDom(person){
-        if (thisperson.total > 100  && person.totalWithAce > 100 ){
-            person.dom.innerText = `${this.person.toUpperCase()} BUSTS! `
-          } else if (person.totalWithAce === 21 || person.total === 21){
-              person.dom.innerText = `${this.person.toUpperCase()} HAS 21!`
-          } else if (person.hasAce === true && person.totalWithAce <= 20) {
-            person.dom.innerText = `${this.person.toUpperCase()} HAS SOFT ${person.totalWithAce}. `
+    updateDom(){
+        if (this.total > 100  && this.totalWithAce > 100 ){
+            this.dom.innerText = `${this.person.toUpperCase()} BUSTS! `
+          } else if (this.totalWithAce === 21 || this.total === 21){
+              this.dom.innerText = `${this.person.toUpperCase()} HAS 21!`
+          } else if (this.hasAce === true && this.totalWithAce <= 20) {
+            this.dom.innerText = `${this.person.toUpperCase()} HAS SOFT ${this.totalWithAce}. `
           } else {
-              person.dom.innerText = `${this.person.toUpperCase()} HAS ${person.total}. `
+              this.dom.innerText = `${this.person.toUpperCase()} HAS ${this.total}. `
           }
     }
+
+
+
+        placeImages(){
+            const img = document.createElement('img')
+            img.src = this.currentCard.cards[0].image
+            document.getElementById(`${this.domPics}`).appendChild(img) 
+        }
 }
 
 
 
 document.getElementById('deal').addEventListener('click', deal)
-// document.getElementById('hit').addEventListener('click', hit)
+document.getElementById('hit').addEventListener('click', hit)
 // document.getElementById('stay').addEventListener('click', stay)
 
 function deal(){
@@ -138,6 +127,26 @@ function deal(){
     if (game.cardsLeft < 15){
         game.newDeck()
         } 
+}
+async function getCard(user){
+    const url = `https://deckofcardsapi.com/api/deck/${game.deckId}/draw/?count=1`
+fetch(url)
+    .then(res => res.json()) // parse response as JSON
+    .then(data => {
+    await timer(200)
+    console.log(data)
+    user.currentCard = data
+})
+    .catch(err => {
+    console.log(`error ${err}`)
+});
+}
+
+function hit(){
+    player.getCard('player')
+    player.addValueOfCard()
+    player.updateDom()
+    player.placeImages()
 }
 
 
