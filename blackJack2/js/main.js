@@ -22,6 +22,7 @@ class MakeGame {
         await timer(200)
         dealer.placeImages()
         dealer.addValueOfCard()
+        dealer.placeFirstCard()
         for (let i = 0; i < 2; i++){
             player.getCard()
             await timer(200)
@@ -136,6 +137,11 @@ class MakePlayer {
               this.dom.innerText = `${this.person.toUpperCase()} HAS ${this.total}. `
           }
     }
+    placeFirstCard(){
+        const img = document.createElement('img')
+        img.src = imageSrc
+        document.getElementById(`${this.person}Images`).appendChild(img) 
+    }
 
     placeImages(){
         const img = document.createElement('img')
@@ -200,21 +206,24 @@ async function stay(){
     document.getElementById('deal').disabled = true
     document.getElementById('hit').disabled = true
     document.getElementById('stay').disabled = true
+    let i = 0
     while (dealer.total < 17 && dealer.totalWithAce <= 17 || dealer.total < 17 && dealer.totalWithAce > 100 ){
         dealer.getCard()
         await timer(750)
+        if(i===0){
+            const img = document.getElementById('dealerImages')
+            img.removeChild(img.lastChild)
+            console.log(i)
+        }
+        i++
+        dealer.placeImages()
         dealer.addValueOfCard(dealer.currentCard)
         dealer.updateDom()
-        dealer.placeImages()
     }
     player.calculateFinalScore()
     dealer.calculateFinalScore()
-    await timer (1000)
+    await timer (900)
     game.compareScores()
-
-//    playerScore()
-//    await timer(600)
-//    compareScores()
    document.getElementById('deal').disabled = false
 }
 
