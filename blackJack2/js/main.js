@@ -1,11 +1,23 @@
 let dealer
 let player
-let deckId
+let deckId 
+let playerWins = localStorage.getItem('playerWins') || 0
+let handsPlayed = localStorage.getItem('handsPlayed') || 0
+let handsPushed = localStorage.getItem('handsPushed') || 0
 let game
 let deck
 let imageSrc = "assets/images/backOfCard.png"
 //creates timer for async functions
 function timer(ms) { return new Promise(res => setTimeout(res, ms)); }
+if (!playerWins){
+    localStorage.setItem('playerWins', 0)
+}
+if (!handsPlayed){
+    localStorage.setItem('handsPlayed', handsPlayed)
+} 
+if (!handsPushed){
+    localStorage.setItem('handsPushed', handsPushed)
+} 
 document.getElementById('deal').addEventListener('click', deal)
 document.getElementById('hit').addEventListener('click', hit)
 document.getElementById('stay').addEventListener('click', stay)
@@ -40,7 +52,6 @@ class MakeGame {
           .then(data => {
             this.deckId = data.deck_id
             this.cardsLeft = data.remaining
- //           localStorage.setItem('deckId', deckId)
           })
           .catch(err => {
               console.log(`error ${err}`)
@@ -50,18 +61,18 @@ class MakeGame {
     compareScores(){
       if (dealer.finalTotal === player.finalTotal){
           dealer.dom.innerText = ` HAND IS A PUSH.`
-//             handsPushed++
-//             localStorage.setItem('handsPushed', handsPushed)
+             handsPushed++
+             localStorage.setItem('handsPushed', handsPushed)
       } else if ( dealer.finalTotal > 100 && player.finalTotal < 22){
           dealer.dom.innerText = ` PLAYER WINS!`
-//             playerWins++
-//             localStorage.setItem('playerWins', playerWins)
+             playerWins++
+             localStorage.setItem('playerWins', playerWins)
       } else if ( player.finalTotal > 100 && dealer.finalTotal < 22 ){
           dealer.dom.innerText = ` DEALER WINS!`
       } else if ( player.finalTotal > dealer.finalTotal){
           dealer.dom.innerText = ` PLAYER WINS!`
-//             playerWins++
-//             localStorage.setItem('playerWins', playerWins)
+             playerWins++
+             localStorage.setItem('playerWins', playerWins)
       } else {
           dealer.dom.innerText = ` DEALER WINS!`
       }
@@ -177,7 +188,8 @@ class MakePlayer {
 }
 
 function deal(){
-
+    handsPlayed++
+    localStorage.setItem('handsPlayed', handsPlayed)
     dealer = new MakePlayer(`dealer`)
     player = new MakePlayer(`player`)
     game = new MakeGame(game.deckId, game.cardsLeft)
@@ -191,6 +203,9 @@ function deal(){
     player.dom.innerText= "PLAYER"
     dealer.dom.innerText = "DEALER"
     game.dealFirstCards()
+    document.getElementById('numberOfHands').innerText = `Hands: ${handsPlayed}`
+    document.getElementById('handsPushed').innerText = `Pushes: ${handsPushed}`
+    document.getElementById('numberOfWins').innerText = `Wins: ${playerWins}`
 }
 
 async function hit(){
@@ -224,7 +239,7 @@ async function stay(){
     dealer.calculateFinalScore()
     await timer (900)
     game.compareScores()
-   document.getElementById('deal').disabled = false
+    document.getElementById('deal').disabled = false
 }
 
 
