@@ -127,7 +127,7 @@ button:disabled:hover{
 
 @media screen and (max-width: 541px){
 	img{
-		height: 16vh;
+		width: 22vw;
 	}
 	h2{
 		font-size: 1.75rem;
