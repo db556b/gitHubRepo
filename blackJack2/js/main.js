@@ -198,6 +198,12 @@ function deal(){
     if (game.cardsLeft < 15){
         game.newDeck()
         } 
+    let rules = document.getElementById('rules')
+    if (rules){
+        rules.remove()
+        rules = false
+    }
+    // document.getElementById('rules').style.visibility = `hidden`
     document.getElementById('hit').disabled = false
     document.getElementById('stay').disabled = false
     document.getElementById('deal').disabled = true
@@ -224,6 +230,7 @@ async function stay(){
     document.getElementById('deal').disabled = true
     document.getElementById('hit').disabled = true
     document.getElementById('stay').disabled = true
+ //   document.getElementById('rules').style.content = 'hidden'
     let i = 0
     while (dealer.total < 17 && dealer.totalWithAce <= 17 || dealer.total < 17 && dealer.totalWithAce > 100 ){
         dealer.getCard()

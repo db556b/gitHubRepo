@@ -65,13 +65,14 @@ h2{
 .top, .bottom{
 	display: flex;
     /* border: 2px solid red; */
-    height: 25vh;
+    height: 27vh;
 	justify-content: center;
 	align-items: center;
+	margin-right: 8vh;
 }
 img {
 	height: 22vh;
-	float: left;
+	/* float: left; */
 	margin-right: -8vh;
 }
 footer{
@@ -120,8 +121,10 @@ button:disabled:hover{
 	border: none;
 }
 #rules {
-	color: rgb(32, 2, 59);
-	font-size: 1.25rem;
+	width: 80vw;
+	color: grey;
+	font-size: 2rem;
+	margin-left: 10vw;
 	z-index: -1;
 }
 
@@ -130,7 +133,6 @@ button:disabled:hover{
 @media screen and (max-width: 541px){
 	img{
 		width: 22vw;
-		float: left;
 		margin-right: -11vw;
 	}
 	h2{
@@ -138,26 +140,29 @@ button:disabled:hover{
 		color:rgb(25, 3, 46)
 	}
 	.top, .bottom{
-		height: 35vh;
+		height: 30vh;
+		margin-right: 11vw;
 		flex-wrap: wrap;
 		flex-basis: content;
 	}
 	#footer {
-		height: 5vh;
+		height: 20vh;
 		width: 100vw;
 		display: flex;
 		justify-content: center;
 		padding: 0 .5rem .5rem .5rem;
-		margin-bottom: .5rem
+		margin-bottom: .5rem;
+		align-items: flex-end;
 	}
 	button{
 		width: 80%;
 		height: 2.2rem;
 		margin: 0 .05rem .5rem .05rem;
 		padding: 0 ;
-		background: radial-gradient(rgb(159, 97, 198),rgb(129, 38, 181),rgb(181, 53, 255));
-		font-size: 1rem;
-		/* color: gray; */
+		background: radial-gradient(rgb(159, 97, 198),rgb(74, 2, 116),rgb(181, 53, 255));
+		font-size: 1.5rem;
+		font-weight: 300;
+		color: black;
 	}
 	#player{
 		margin-bottom:1rem;
@@ -167,7 +172,7 @@ button:disabled:hover{
 		align-items: center;
 		
 	}
-	p {
+	p, #rules {
 		font-size: 1.3rem;
 		padding: 1rem;
 		color:gray;
@@ -178,7 +183,7 @@ button:disabled:hover{
 		align-items: center;
 		padding: 0;
 	}
-	#rules {
-		font-size: .6rem;
+	#rules{
+		margin-left: 11vw;
 	}
 }
