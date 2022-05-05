@@ -22,6 +22,8 @@ if (!handsPushed){
 document.getElementById('deal').addEventListener('click', deal)
 document.getElementById('hit').addEventListener('click', hit)
 document.getElementById('stay').addEventListener('click', stay)
+document.getElementById('hit').disabled = true
+document.getElementById('stay').disabled = true
 
 // creates class for new player
 class MakeGame {
@@ -32,13 +34,13 @@ class MakeGame {
     // deals the first cards for the "initial deal"
     async dealFirstCards(){
         dealer.getCard()
-        await timer(200)
+        await timer(500)
         dealer.placeImages()
         dealer.addValueOfCard()
         dealer.placeFirstCard()
         for (let i = 0; i < 2; i++){
             player.getCard()
-            await timer(200)
+            await timer(700)
             player.placeImages()
             player.addValueOfCard()
             player.updateDom()
@@ -211,7 +213,7 @@ function deal(){
 
 async function hit(){
     player.getCard()
-    await timer(200)
+    await timer(800)
     player.addValueOfCard(player.currentCard)
     player.updateDom()
     player.placeImages()
