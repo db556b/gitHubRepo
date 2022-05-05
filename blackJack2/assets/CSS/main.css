@@ -71,6 +71,8 @@ h2{
 }
 img {
 	height: 22vh;
+	float: left;
+	margin-right: -8vh;
 }
 footer{
 	display: flex;
@@ -128,6 +130,8 @@ button:disabled:hover{
 @media screen and (max-width: 541px){
 	img{
 		width: 22vw;
+		float: left;
+		margin-right: -11vw;
 	}
 	h2{
 		font-size: 1.75rem;
