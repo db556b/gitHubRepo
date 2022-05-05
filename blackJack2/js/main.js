@@ -34,13 +34,13 @@ class MakeGame {
     // deals the first cards for the "initial deal"
     async dealFirstCards(){
         dealer.getCard()
-        await timer(500)
+        await timer(300)
         dealer.placeImages()
         dealer.addValueOfCard()
         dealer.placeFirstCard()
         for (let i = 0; i < 2; i++){
             player.getCard()
-            await timer(700)
+            await timer(300)
             player.placeImages()
             player.addValueOfCard()
             player.updateDom()
