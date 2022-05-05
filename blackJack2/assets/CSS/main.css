@@ -55,6 +55,7 @@ table {
 	border-spacing: 0;
 }
 section{
+	height: 10vh;
 	display: flex;
 	justify-content: center;
 }
@@ -127,9 +128,9 @@ button:disabled:hover{
 /* media queries */
 
 @media screen and (max-width: 541px){
-	img{
-		width: 22vw;
-		margin-right: -11vw;
+	img {
+		height: 22vh;
+		margin-right: -25vw;
 	}
 	h2{
 		font-size: 1.75rem;
@@ -137,12 +138,12 @@ button:disabled:hover{
 	}
 	.top, .bottom{
 		height: 30vh;
-		margin-right: 11vw;
+		margin-right: 25vw;
 		flex-wrap: wrap;
 		flex-basis: content;
 	}
 	#footer {
-		height: 20vh;
+		height: 10vh;
 		width: 100vw;
 		display: flex;
 		justify-content: center;
@@ -166,7 +167,7 @@ button:disabled:hover{
 	footer{ 
 		flex-direction: column;
 		align-items: center;
-		
+		height: 5vh;
 	}
 	p, #rules {
 		font-size: 1.3rem;
@@ -178,6 +179,7 @@ button:disabled:hover{
 		display: flex;
 		align-items: center;
 		padding: 0;
+		height: 1vh;
 	}
 	#rules{
 		margin-left: 11vw;
