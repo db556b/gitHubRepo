@@ -19,7 +19,8 @@ body {
 /*******************************************/
 header {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   font-size: 2.5rem;
 }
 section {
@@ -30,7 +31,9 @@ section {
   line-height: 6rem;
   height: 75vh;
 }
-
+h1 {
+  margin-bottom: 0;
+}
 input, button{
   border-radius: 1rem;
   border-color: black;
@@ -49,6 +52,13 @@ footer {
 
 ::placeholder {
   text-align: center;
+}
+
+header > button {
+  background-color: rgb(242, 22, 22);
+  color: white;
+  width: 60vw;
+  margin: 0;
 }
 /******************************************
 /* ADDITIONAL STYLES
