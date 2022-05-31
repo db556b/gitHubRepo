@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const MongoClient = require('mongodb').MongoClient
-const connectionString = 'mongodb+srv://db556b:%21Knuwme3131@starwars.nsatx.mongodb.net/?retryWrites=true&w=majority'
+const connectionString = 'mongodb+srv://<username>:<password>@starwars.nsatx.mongodb.net/?retryWrites=true&w=majority'
 
 MongoClient.connect(connectionString)
     .then(client=> {
