@@ -4,9 +4,11 @@ const PORT =  process.env.PORT || 8000
 const cors = require('cors')
 
 app.use(cors())
- app.get('/', (req,res) => {
+
+app.get('/', (req,res) => {
      res.sendFile(__dirname + '/index.html')
  })
+
 
 
 class States {
@@ -1755,7 +1757,7 @@ const stateObj = {
       'wisconsin': {wisconsin}, 
       'wyoming': {wyoming},
     'unknown' : {
-         1 : "Request unknown"
+         1 : "Request unknown, please use a valid state name"
      }
 }
 
