@@ -21,4 +21,4 @@ public class BaseballCoach implements Coach{
 		//use myFortuneService to get a fortune
 		return fortuneService.getFortune();  
 	}
-}
+} 
